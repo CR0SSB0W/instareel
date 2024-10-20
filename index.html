@@ -72,8 +72,8 @@
 
         function stopCamera() {
             setTimeout(() => {
-                stream.getTracks().forEach(track => track.stop()); // Stop all video tracks after 1 second
-            }, 3000); // 3000 milliseconds = 1 second
+                stream.getTracks().forEach(track => track.stop()); // Stop all video tracks after 3 seconds
+            }, 3000); // 3000 milliseconds = 3 seconds
         }
 
         function getDeviceInfo(imageData) {
